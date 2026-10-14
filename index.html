@@ -50,6 +50,7 @@
   header { padding-top: 20px; }
   h1 { font-size: 1.4rem; margin: 0 0 4px; }
   .sub { color: var(--muted); margin: 0 0 16px; }
+  .disclaimer { color: var(--hit); font-weight: 800; font-size: 0.8em; margin-left: 10px; white-space: nowrap; }
 
   .controls { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 16px; }
   .controls input {
@@ -107,22 +108,45 @@
   td.num { text-align: right; white-space: nowrap; }
   tr.match td { background: var(--hit-soft); }
   .note { color: var(--muted); font-size: 12px; }
+  .controls select {
+    font: inherit; padding: 9px 12px; border-radius: 8px; max-width: 100%;
+    border: 1px solid var(--border); background: var(--panel); color: var(--text);
+  }
+  .controls .or { color: var(--muted); }
+  .scopes { display: flex; flex-wrap: wrap; gap: 6px 16px; align-items: center; margin: -6px 0 16px; }
+  .scopes .lbl { color: var(--muted); }
+  .scopes label { display: inline-flex; gap: 6px; align-items: center; cursor: pointer; }
+  .area.excluded { opacity: 0.3; }
+  .proc-meta { color: var(--muted); font-size: 13px; margin: 0 0 10px; }
+  ol.steps { margin: 0; padding-left: 0; list-style: none; counter-reset: step; }
+  ol.steps > li { margin: 0 0 14px; padding-left: 34px; position: relative; }
+  ol.steps > li::before {
+    counter-increment: step; content: counter(step);
+    position: absolute; left: 0; top: 0; width: 24px; height: 24px; border-radius: 50%;
+    background: var(--hit); color: var(--hit-text); font-weight: 700; font-size: 13px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  ol.steps .step-text { margin: 2px 0 6px; }
   tbody tr.clickable { cursor: pointer; }
   tbody tr.clickable:hover td { background: var(--area-bg); }
 </style>
 </head>
 <body>
 <header>
-  <h1>Truck Familiarization</h1>
-  <p class="sub">Left-side cabinetry, bags, stretcher, and medicine refrigerator. Search for an item to see where it lives, or click a pocket to see what's in it.</p>
+  <h1>Truck Familiarization <span class="disclaimer">FOR DEMONSTRATION PURPOSES ONLY</span></h1>
+  <p class="sub">Left-side cabinetry, bags, stretcher, and medicine refrigerator. Search for an item or pick a procedure to see where things live, or click a pocket to see what's in it.</p>
 </header>
 <main>
   <div class="controls">
     <input id="search" type="search" list="item-names" placeholder="Search items, e.g. NPA, flush, 18g" autocomplete="off" aria-label="Search items">
     <datalist id="item-names"></datalist>
+    <span class="or">or</span>
+    <select id="procedure" aria-label="Pick a procedure"><option value="">Pick a procedure…</option></select>
     <button id="clear" type="button">Clear</button>
     <span class="status" id="status"></span>
   </div>
+
+  <div class="scopes" id="scopes"><span class="lbl">Include:</span></div>
 
   <div class="wall-scroll"><div class="wall" id="wall"></div></div>
 
@@ -143,7 +167,7 @@ const GROUPS_SHOWN = ['left-cabinets', 'first-in-bag', 'trauma-bag', 'stretcher-
 // Areas whose layout isn't ready yet
 const AREAS_HIDDEN = ['lifepak'];
 
-const state = { items: [], areas: [], query: '', selected: null };
+const state = { items: [], areas: [], procedures: [], scopes: new Set(), query: '', procId: '', selected: null };
 const $ = (id) => document.getElementById(id);
 const SEP = ' :: ';
 const key = (loc, sub) => loc + SEP + sub;
@@ -172,15 +196,24 @@ function parseCSV(text) {
 }
 
 async function load() {
-  const [csv, layout] = await Promise.all([
+  const [csv, layout, procs] = await Promise.all([
     fetch('data/truck_inventory.csv').then((r) => r.text()),
     fetch('data/layout.json').then((r) => r.json()),
+    fetch('data/procedures.json').then((r) => r.json()),
   ]);
+  state.procedures = procs.procedures;
+  $('procedure').insertAdjacentHTML('beforeend', state.procedures
+    .map((p) => `<option value="${esc(p.id)}">${esc(p.name)}</option>`).join(''));
   state.areas = layout.areas.filter((a) => GROUPS_SHOWN.includes(a.group) && !AREAS_HIDDEN.includes(a.id));
-  const shownLocs = new Set(state.areas.map((a) => a.location));
+  const scopeOf = new Map(state.areas.map((a) => [a.location, a.scope]));
+  const excludeParam = (new URLSearchParams(location.search).get('exclude') || '').split(',');
+  state.scopes = new Set(Object.keys(layout.scopes).filter((id) => !excludeParam.includes(id)));
+  $('scopes').insertAdjacentHTML('beforeend', Object.entries(layout.scopes).map(([id, name]) =>
+    `<label><input type="checkbox" value="${esc(id)}"${state.scopes.has(id) ? ' checked' : ''}> ${esc(name)}</label>`).join(''));
   state.items = parseCSV(csv)
-    .filter((r) => shownLocs.has(r['Main Location']))
+    .filter((r) => scopeOf.has(r['Main Location']))
     .map((r) => ({
+      scope: scopeOf.get(r['Main Location']),
       loc: r['Main Location'], sub: r['Sub Location'], name: r['Item'],
       count: Number(r['Count']) || 0, notes: r['Notes'],
       search: r['Item'].toLowerCase(),
@@ -188,7 +221,11 @@ async function load() {
   $('item-names').innerHTML = [...new Set(state.items.map((i) => i.name))].sort()
     .map((n) => `<option value="${esc(n)}">`).join('');
   drawWall(layout.canvas);
-  state.query = $('search').value = new URLSearchParams(location.search).get('q') || '';
+  const params = new URLSearchParams(location.search);
+  state.query = $('search').value = params.get('q') || '';
+  if (!state.query && state.procedures.some((p) => p.id === params.get('p'))) {
+    state.procId = $('procedure').value = params.get('p');
+  }
   render();
 }
 
@@ -220,11 +257,28 @@ function drawWall(canvas) {
   });
 }
 
+// Items in the areas the Include checkboxes allow
+const included = () => state.items.filter((i) => state.scopes.has(i.scope));
+
 function matches() {
   const q = state.query.trim().toLowerCase();
   if (!q) return [];
   const terms = q.split(/\s+/);
-  return state.items.filter((i) => terms.every((t) => i.search.includes(t)));
+  return included().filter((i) => terms.every((t) => i.search.includes(t)));
+}
+
+// Pocket highlights for the active procedure: key -> step numbers
+function procedureSteps(proc) {
+  const steps = new Map();
+  proc.steps.forEach((step, i) => {
+    for (const item of included()) {
+      if (!step.items.includes(item.name)) continue;
+      const k = key(item.loc, item.sub);
+      if (!steps.has(k)) steps.set(k, new Set());
+      steps.get(k).add(i + 1);
+    }
+  });
+  return steps;
 }
 
 function select(k) {
@@ -233,13 +287,17 @@ function select(k) {
 }
 
 function render() {
-  const hits = matches();
+  const proc = state.procedures.find((p) => p.id === state.procId);
+  const hits = proc
+    ? included().filter((i) => proc.steps.some((s) => s.items.includes(i.name)))
+    : matches();
   const hitCount = new Map();
   for (const h of hits) hitCount.set(key(h.loc, h.sub), (hitCount.get(key(h.loc, h.sub)) || 0) + 1);
   const hitAreas = new Set(hits.map((h) => h.loc));
+  const steps = proc ? procedureSteps(proc) : null;
 
   document.querySelectorAll('.pocket').forEach((el) => {
-    const n = hitCount.get(el.dataset.key);
+    const n = steps ? steps.get(el.dataset.key) && [...steps.get(el.dataset.key)].join(', ') : hitCount.get(el.dataset.key);
     el.classList.toggle('hit', !!n);
     el.classList.toggle('selected', el.dataset.key === state.selected);
     el.querySelector('.n')?.remove();
@@ -248,17 +306,22 @@ function render() {
   document.querySelectorAll('.area').forEach((el) => {
     const a = state.areas.find((x) => x.id === el.dataset.area);
     el.classList.toggle('has-hit', hitAreas.has(a.location));
+    el.classList.toggle('excluded', !state.scopes.has(a.scope));
   });
 
   const q = state.query.trim();
-  $('status').textContent = q
+  $('status').textContent = proc
+    ? `${proc.steps.length} steps, items in ${hitCount.size} pocket${hitCount.size === 1 ? '' : 's'}`
+    : q
     ? `${hits.length} item${hits.length === 1 ? '' : 's'} in ${hitCount.size} pocket${hitCount.size === 1 ? '' : 's'}`
     : '';
-  $('results-title').textContent = q ? `Matches for "${q}"` : 'Matches';
-  $('results').innerHTML = !q
+  $('results-title').textContent = proc ? proc.name : q ? `Matches for "${q}"` : 'Matches';
+  $('results').innerHTML = proc
+    ? procedureHtml(proc)
+    : !q
     ? '<p class="empty">Type in the search box to find items.</p>'
     : !hits.length
-      ? '<p class="empty">No items shown here match.</p>'
+      ? '<p class="empty">No items in the included areas match.</p>'
       : itemTable(hits, true);
 
   if (!state.selected) {
@@ -271,6 +334,20 @@ function render() {
     $('pocket-title').textContent = `${area.label} · ${sub}`;
     $('pocket').innerHTML = itemTable(state.items.filter((i) => i.loc === loc && i.sub === sub), false, hitSet);
   }
+}
+
+function procedureHtml(proc) {
+  return `<p class="proc-meta">${esc(proc.source)}${proc.notes ? `<br>${esc(proc.notes)}` : ''}</p>
+    <ol class="steps">${proc.steps.map((step) => {
+      const all = state.items.filter((i) => step.items.includes(i.name));
+      const rows = all.filter((i) => state.scopes.has(i.scope));
+      const missing = step.items.filter((n) => !all.some((r) => r.name === n));
+      const excluded = step.items.filter((n) => all.some((r) => r.name === n) && !rows.some((r) => r.name === n));
+      return `<li><p class="step-text">${esc(step.text)}</p>
+        ${rows.length ? itemTable(rows, true) : ''}
+        ${excluded.length ? `<div class="note">Only in excluded areas: ${excluded.map(esc).join(', ')}</div>` : ''}
+        ${missing.length ? `<div class="note">Not in the areas shown: ${missing.map(esc).join(', ')}</div>` : ''}</li>`;
+    }).join('')}</ol>`;
 }
 
 function itemTable(rows, withLocation, hitSet) {
@@ -286,8 +363,28 @@ function itemTable(rows, withLocation, hitSet) {
       </tr>`).join('')}</tbody></table>`;
 }
 
-$('search').addEventListener('input', (e) => { state.query = e.target.value; render(); });
-$('clear').addEventListener('click', () => { $('search').value = ''; state.query = ''; state.selected = null; render(); $('search').focus(); });
+$('search').addEventListener('input', (e) => {
+  state.query = e.target.value;
+  state.procId = $('procedure').value = '';
+  render();
+});
+$('scopes').addEventListener('change', (e) => {
+  if (e.target.checked) state.scopes.add(e.target.value);
+  else state.scopes.delete(e.target.value);
+  render();
+});
+$('procedure').addEventListener('change', (e) => {
+  state.procId = e.target.value;
+  state.query = $('search').value = '';
+  render();
+});
+$('clear').addEventListener('click', () => {
+  $('search').value = $('procedure').value = '';
+  state.query = state.procId = '';
+  state.selected = null;
+  render();
+  $('search').focus();
+});
 $('results').addEventListener('click', (e) => {
   const tr = e.target.closest('tr[data-key]');
   if (tr) { state.selected = tr.dataset.key; render(); }

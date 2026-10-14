@@ -43,6 +43,8 @@ for area in layout["areas"]:
     check_box(f"area '{area['id']}'", area, 100)
     if area["group"] not in layout["groups"]:
         report(f"area '{area['id']}': unknown group '{area['group']}'")
+    if area.get("scope") not in layout["scopes"]:
+        report(f"area '{area['id']}': unknown scope '{area.get('scope')}'")
     if loc not in inventory:
         report(f"area '{area['id']}': location '{loc}' not in inventory")
         continue

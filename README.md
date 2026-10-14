@@ -19,14 +19,17 @@ if you're in an apartment with just the stretcher and the red bag.
 - `data/truck_inventory.csv` / `.xlsx` – every item: Main Location, Sub Location, Item, Count, Notes.
   The CSV is the source of truth; the xlsx is a copy for convenient editing/viewing.
 - `data/layout.json` – where each location is drawn on the page.
+- `data/procedures.json` – procedures and the items each step needs (see below).
 
 ### layout.json
 
 - `canvas` – the design size of the page in pixels (positions scale with it).
-- `groups` – the five areas from the top of this README. Scope filters work on groups.
+- `groups` – the five areas from the top of this README.
+- `scopes` – the include/exclude checkboxes on the page (e.g. Truck, First-In Bag, Pediatric Bag).
 - `areas` – one box per inventory Main Location:
   - `location` must match a Main Location in the inventory exactly.
   - `label` is the text shown on the page.
+  - `scope` is which checkbox includes or excludes the area.
   - `kind` (optional): `bag` draws the area with a heavy border so it reads as separate from the wall.
   - `x`, `y`, `w`, `h` are percentages (0–100) of the canvas.
   - `status` is a note for editing: `from-prototype` (box and pockets copied from Tableau),
@@ -38,3 +41,11 @@ if you're in an apartment with just the stretcher and the red bag.
     `x`, `y`, `w`, `h` are fractions (0–1) of the parent area.
 
 Run `python tools/check_layout.py` after editing to catch name mismatches and out-of-bounds boxes.
+
+### procedures.json
+
+Each procedure has an `id` (used in links: `?p=io-setup`), a `name`, a `source` (where it came from in
+the protocols), optional `notes`, and `steps`. Each step has `text` and `items` – a list of inventory
+Item names, matched exactly. The page numbers every pocket holding an item by the step(s) that need it.
+
+Run `python tools/check_procedures.py` after editing to catch item names that don't match the inventory.

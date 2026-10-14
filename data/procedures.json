@@ -1,0 +1,159 @@
+{
+  "procedures": [
+    {
+      "id": "io-setup",
+      "name": "Set up an IO",
+      "source": "REMSA Protocols: Universal Care (vascular access, 3a)",
+      "notes": "",
+      "steps": [
+        {
+          "text": "IO needle.",
+          "items": [
+            "EZ-IO Needle 15mm", "EZ-IO Needle 25mm", "EZ-IO Needle 45mm",
+            "Intraosseous (IO) Needle 15mm", "Intraosseous (IO) Needle 25mm", "Intraosseous (IO) Needle 45mm"
+          ]
+        },
+        {
+          "text": "Conscious patient: consider priming the extension set with 1 mL of 2% lidocaine, then slowly infusing 0.5 mg/kg of 2% lidocaine through the IO needle (maximum 40 mg). Allow to dwell for 1 minute.",
+          "items": ["Lidocaine"]
+        },
+        {
+          "text": "Flush with 10 mL of normal saline.",
+          "items": ["Normal Saline (NS) Flush"]
+        }
+      ]
+    },
+    {
+      "id": "intubation-setup",
+      "name": "Set up for intubation",
+      "source": "REMSA Protocols: Airway Management (7. Endotracheal intubation, 8. Post-intubation management)",
+      "notes": "Sedation (ketamine) and post-intubation fentanyl/midazolam are in the protocol but not in the truck inventory.",
+      "steps": [
+        {
+          "text": "Preoxygenate. Apneic oxygenation (high-flow oxygen by nasal cannula) may prolong the time before hypoxia during the attempt.",
+          "items": ["Nasal Cannula (NC)"]
+        },
+        {
+          "text": "Prompt suctioning of soiled airways before the attempt.",
+          "items": ["Suction Canister", "Suction Tubing", "Yankauer Suction Tip"]
+        },
+        {
+          "text": "Paralytic: rocuronium 1 mg/kg.",
+          "items": ["Rocuronium"]
+        },
+        {
+          "text": "Video laryngoscopy when available; otherwise direct laryngoscopy.",
+          "items": [
+            "iView Video Laryngoscope", "Laryngoscope Handle",
+            "Macintosh (MAC) Blade 3", "Macintosh (MAC) Blade 4",
+            "Miller Blade 2", "Miller Blade 3", "Miller Blade 4"
+          ]
+        },
+        {
+          "text": "Initial tube size: adult females 7.5, adult males 8.0. A bougie may help, especially when video laryngoscopy is unavailable.",
+          "items": ["Endotracheal Tube (ETT) 7.5", "Endotracheal Tube (ETT) 8.0", "Bougie"]
+        },
+        {
+          "text": "Plan for an alternate airway if intubation is unsuccessful: supraglottic airway.",
+          "items": ["i-gel Supraglottic Airway Size 3", "i-gel Supraglottic Airway Size 4", "i-gel Supraglottic Airway Size 5"]
+        },
+        {
+          "text": "Inflate the cuff with minimum air to seal the airway.",
+          "items": ["Syringe 10mL"]
+        },
+        {
+          "text": "Confirm placement with waveform capnography.",
+          "items": ["In-Line End-Tidal CO2 (ETCO2) Filter Line Set", "End-Tidal CO2 (ETCO2) Filter Line Set"]
+        },
+        {
+          "text": "Secure the tube with tape, twill, or a commercial device.",
+          "items": ["Endotracheal Tube (ETT) Holder", "Cloth Tape"]
+        },
+        {
+          "text": "Manual ventilation, or mechanical ventilation if available.",
+          "items": ["Bag Valve Mask (BVM) Adult", "Pocket Ventilator"]
+        }
+      ]
+    },
+    {
+      "id": "iv-fentanyl",
+      "name": "Set up IV, deliver fentanyl, and monitor",
+      "source": "REMSA Protocols: Pain Management Including Procedural Sedation (6a, 7, 12); Universal Care (monitoring, vascular access)",
+      "notes": "Fentanyl is not in the truck inventory.",
+      "steps": [
+        {
+          "text": "Monitoring: continuous pulse oximetry, cardiac rhythm, and waveform capnography (required if administering opioids).",
+          "items": ["Pulse Oximetry (SpO2) Sensor", "4-Lead Cable with Electrodes", "End-Tidal CO2 (ETCO2) Nasal Cannula"]
+        },
+        {
+          "text": "Establish vascular access.",
+          "items": [
+            "Intravenous (IV) Start Kit",
+            "Intravenous (IV) Catheter 14g", "Intravenous (IV) Catheter 16g", "Intravenous (IV) Catheter 18g",
+            "Intravenous (IV) Catheter 20g", "Intravenous (IV) Catheter 22g", "Intravenous (IV) Catheter 24g"
+          ]
+        },
+        {
+          "text": "Fentanyl 1 mcg/kg IV (maximum initial dose 100 mcg).",
+          "items": []
+        },
+        {
+          "text": "If indicated by pain assessment and vital signs allow, repeat after 5 minutes.",
+          "items": ["Blood Pressure (BP) Cuff"]
+        }
+      ]
+    },
+    {
+      "id": "hypoglycemia",
+      "name": "Check and treat low blood sugar",
+      "source": "REMSA Protocols: Hypoglycemia (Treatment and Interventions 2)",
+      "notes": "Treat if blood glucose is 60 mg/dL or less. D5 500 mL is also listed in the protocol but is not in the truck inventory.",
+      "steps": [
+        {
+          "text": "Check blood glucose.",
+          "items": ["Glucometer", "Glucometer Test Strips", "Lancets"]
+        },
+        {
+          "text": "Conscious with a patent airway: oral glucose 15 g.",
+          "items": ["Oral Glucose 15g"]
+        },
+        {
+          "text": "Unconscious or unable to protect airway: dextrose IV in incremental doses until mental status improves (D10 250 mL preferred).",
+          "items": ["Dextrose 10% (D10) 250mL"]
+        }
+      ]
+    },
+    {
+      "id": "chest-pain",
+      "name": "Chest pain: 12-lead, aspirin, IV, nitro",
+      "source": "REMSA Protocols: Chest Pain/(ACS)/STEMI (Treatment 3-7)",
+      "notes": "Avoid nitro if a phosphodiesterase inhibitor was used in the past 48 hours.",
+      "steps": [
+        {
+          "text": "Oxygen as appropriate, targeting 94-98% saturation.",
+          "items": []
+        },
+        {
+          "text": "Acquire a 12-lead EKG within 10 minutes.",
+          "items": ["12-Lead Cable with Electrodes"]
+        },
+        {
+          "text": "Aspirin 324 mg, chewable non-enteric-coated preferred.",
+          "items": ["Aspirin (ASA) Bottle"]
+        },
+        {
+          "text": "Establish IV access.",
+          "items": [
+            "Intravenous (IV) Start Kit",
+            "Intravenous (IV) Catheter 14g", "Intravenous (IV) Catheter 16g", "Intravenous (IV) Catheter 18g",
+            "Intravenous (IV) Catheter 20g", "Intravenous (IV) Catheter 22g", "Intravenous (IV) Catheter 24g"
+          ]
+        },
+        {
+          "text": "Nitroglycerin 0.4 mg SL; may repeat up to three times every 3-5 minutes if SBP is greater than 100 mmHg or MAP is greater than 65.",
+          "items": ["Nitroglycerin (NTG) Bottle", "Blood Pressure (BP) Cuff"]
+        }
+      ]
+    }
+  ]
+}
