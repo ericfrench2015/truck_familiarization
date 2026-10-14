@@ -12,6 +12,7 @@
     --muted: #5f6b7d;
     --border: #d5dae2;
     --area-bg: #eef1f5;
+    --bag-border: #5f6b7d;
     --pocket-bg: #ffffff;
     --pocket-border: #b9c1cd;
     --hit: #d62839;
@@ -27,6 +28,7 @@
       --muted: #9aa4b4;
       --border: #333a46;
       --area-bg: #20252f;
+      --bag-border: #8b96a8;
       --pocket-bg: #2a303b;
       --pocket-border: #465061;
       --hit: #ef4655;
@@ -36,6 +38,8 @@
     }
   }
   * { box-sizing: border-box; }
+  /* Overall page size: 1 = original, 0.5 = half size */
+  html { zoom: 0.5; }
   body {
     margin: 0;
     font: 15px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
@@ -70,12 +74,12 @@
     position: absolute;
     background: var(--area-bg); border: 1px solid var(--border); border-radius: 8px;
   }
+  .area.bag { border: 3px solid var(--bag-border); border-radius: 12px; }
   .area.has-hit { border-color: var(--hit); box-shadow: 0 0 0 1px var(--hit); }
   .area-label {
     position: absolute; left: 8px; right: 8px; top: 4px;
     font-size: 12px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   }
-  .area.placeholder .area-label::after { content: " (placeholder layout)"; font-weight: 400; color: var(--muted); }
   .pocket {
     position: absolute; padding: 2px;
     display: flex; align-items: center; justify-content: center; text-align: center;
@@ -83,6 +87,7 @@
     background: var(--pocket-bg); border: 1px solid var(--pocket-border); border-radius: 5px;
     cursor: pointer; overflow: hidden;
   }
+  .pocket[style*="--pocket-color"] { border: 2px solid var(--pocket-color); border-left-width: 6px; }
   .pocket:hover { border-color: var(--focus); }
   .pocket:focus-visible { outline: 2px solid var(--focus); outline-offset: 1px; }
   .pocket.hit { background: var(--hit); border-color: var(--hit); color: var(--hit-text); font-weight: 600; }
@@ -109,7 +114,7 @@
 <body>
 <header>
   <h1>Truck Familiarization</h1>
-  <p class="sub">Left-side cabinetry. Search for an item to see where it lives, or click a pocket to see what's in it.</p>
+  <p class="sub">Left-side cabinetry, bags, stretcher, and medicine refrigerator. Search for an item to see where it lives, or click a pocket to see what's in it.</p>
 </header>
 <main>
   <div class="controls">
@@ -134,7 +139,9 @@
 </main>
 
 <script>
-const GROUPS_SHOWN = ['left-cabinets'];
+const GROUPS_SHOWN = ['left-cabinets', 'first-in-bag', 'trauma-bag', 'stretcher-lifepak', 'refrigerator'];
+// Areas whose layout isn't ready yet
+const AREAS_HIDDEN = ['lifepak'];
 
 const state = { items: [], areas: [], query: '', selected: null };
 const $ = (id) => document.getElementById(id);
@@ -169,7 +176,7 @@ async function load() {
     fetch('data/truck_inventory.csv').then((r) => r.text()),
     fetch('data/layout.json').then((r) => r.json()),
   ]);
-  state.areas = layout.areas.filter((a) => GROUPS_SHOWN.includes(a.group));
+  state.areas = layout.areas.filter((a) => GROUPS_SHOWN.includes(a.group) && !AREAS_HIDDEN.includes(a.id));
   const shownLocs = new Set(state.areas.map((a) => a.location));
   state.items = parseCSV(csv)
     .filter((r) => shownLocs.has(r['Main Location']))
@@ -199,12 +206,12 @@ function drawWall(canvas) {
   const wall = $('wall');
   wall.style.aspectRatio = `${bw * canvas.width} / ${bh * canvas.height}`;
   wall.innerHTML = state.areas.map((a) => `
-    <div class="area${a.status === 'placeholder' ? ' placeholder' : ''}" data-area="${esc(a.id)}"
+    <div class="area${a.kind ? ' ' + a.kind : ''}" data-area="${esc(a.id)}"
          style="left:${(a.x - x0) / bw * 100}%;top:${(a.y - y0) / bh * 100}%;width:${a.w / bw * 100}%;height:${a.h / bh * 100}%">
       <div class="area-label" title="${esc(a.location)}">${esc(a.label)}</div>
       ${a.subLocations.map((s) => `
         <button type="button" class="pocket" data-key="${esc(key(a.location, s.name))}"
-             style="left:${s.x * 100}%;top:${s.y * 100}%;width:${s.w * 100}%;height:${s.h * 100}%"
+             style="left:${s.x * 100}%;top:${s.y * 100}%;width:${s.w * 100}%;height:${s.h * 100}%${s.color ? `;--pocket-color:${s.color}` : ''}"
              title="${esc(s.name)}">${esc(s.label || s.name)}</button>`).join('')}
     </div>`).join('');
   wall.addEventListener('click', (e) => {
@@ -251,7 +258,7 @@ function render() {
   $('results').innerHTML = !q
     ? '<p class="empty">Type in the search box to find items.</p>'
     : !hits.length
-      ? '<p class="empty">No items on the side wall match.</p>'
+      ? '<p class="empty">No items shown here match.</p>'
       : itemTable(hits, true);
 
   if (!state.selected) {

@@ -27,9 +27,13 @@ if you're in an apartment with just the stretcher and the red bag.
 - `areas` – one box per inventory Main Location:
   - `location` must match a Main Location in the inventory exactly.
   - `label` is the text shown on the page.
+  - `kind` (optional): `bag` draws the area with a heavy border so it reads as separate from the wall.
   - `x`, `y`, `w`, `h` are percentages (0–100) of the canvas.
   - `status` is a note for editing: `from-prototype` (box and pockets copied from Tableau),
-    `area-from-prototype` (box from Tableau, pockets are placeholders), `placeholder` (all placeholder).
+    `area-from-prototype` (box from Tableau, pockets are placeholders), `draft` (pockets laid out
+    from photos, needs review), `placeholder` (all placeholder).
+  - `subLocations` may also have `label` (short text shown on the box; full name shows on hover)
+    and `color` (accent color, e.g. for the blue IV pod).
   - `subLocations` – one box per Sub Location; `name` must match the inventory, and
     `x`, `y`, `w`, `h` are fractions (0–1) of the parent area.
 
