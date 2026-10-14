@@ -96,6 +96,8 @@
   .pocket .n {
     position: absolute; top: 2px; right: 3px; font-size: 10px; font-weight: 700;
   }
+  .pocket.has-steps { flex-direction: column; gap: 1px; }
+  .pocket .n.steps { position: static; font-size: 18px; line-height: 1.05; font-weight: 800; }
 
   .panels { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 16px 0 32px; }
   @media (max-width: 800px) { .panels { grid-template-columns: 1fr; } }
@@ -301,7 +303,8 @@ function render() {
     el.classList.toggle('hit', !!n);
     el.classList.toggle('selected', el.dataset.key === state.selected);
     el.querySelector('.n')?.remove();
-    if (n) el.insertAdjacentHTML('beforeend', `<span class="n">${n}</span>`);
+    el.classList.toggle('has-steps', !!(steps && n));
+    if (n) el.insertAdjacentHTML(steps ? 'afterbegin' : 'beforeend', `<span class="n${steps ? ' steps' : ''}">${n}</span>`);
   });
   document.querySelectorAll('.area').forEach((el) => {
     const a = state.areas.find((x) => x.id === el.dataset.area);
