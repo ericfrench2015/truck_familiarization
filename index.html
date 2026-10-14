@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Truck Familiarization</title>
+<style>
+  :root {
+    --bg: #f6f7f9;
+    --panel: #ffffff;
+    --text: #1d2330;
+    --muted: #5f6b7d;
+    --border: #d5dae2;
+    --area-bg: #eef1f5;
+    --pocket-bg: #ffffff;
+    --pocket-border: #b9c1cd;
+    --hit: #d62839;
+    --hit-text: #ffffff;
+    --hit-soft: #fde8ea;
+    --focus: #1f6feb;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #13161c;
+      --panel: #1b1f27;
+      --text: #e6e9ef;
+      --muted: #9aa4b4;
+      --border: #333a46;
+      --area-bg: #20252f;
+      --pocket-bg: #2a303b;
+      --pocket-border: #465061;
+      --hit: #ef4655;
+      --hit-text: #ffffff;
+      --hit-soft: #3a1c21;
+      --focus: #58a6ff;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font: 15px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+  }
+  header, main { max-width: 1240px; margin: 0 auto; padding: 0 16px; }
+  header { padding-top: 20px; }
+  h1 { font-size: 1.4rem; margin: 0 0 4px; }
+  .sub { color: var(--muted); margin: 0 0 16px; }
+
+  .controls { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 16px; }
+  .controls input {
+    flex: 1 1 320px; max-width: 520px;
+    font: inherit; padding: 9px 12px;
+    border: 1px solid var(--border); border-radius: 8px;
+    background: var(--panel); color: var(--text);
+  }
+  .controls input:focus { outline: 2px solid var(--focus); outline-offset: 1px; }
+  .controls button {
+    font: inherit; padding: 9px 14px; border-radius: 8px; cursor: pointer;
+    border: 1px solid var(--border); background: var(--panel); color: var(--text);
+  }
+  .status { color: var(--muted); }
+
+  .wall-scroll { overflow-x: auto; padding-bottom: 4px; }
+  .wall {
+    position: relative; min-width: 860px;
+    background: var(--panel); border: 1px solid var(--border); border-radius: 12px;
+  }
+  .area {
+    position: absolute;
+    background: var(--area-bg); border: 1px solid var(--border); border-radius: 8px;
+  }
+  .area.has-hit { border-color: var(--hit); box-shadow: 0 0 0 1px var(--hit); }
+  .area-label {
+    position: absolute; left: 8px; right: 8px; top: 4px;
+    font-size: 12px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .area.placeholder .area-label::after { content: " (placeholder layout)"; font-weight: 400; color: var(--muted); }
+  .pocket {
+    position: absolute; padding: 2px;
+    display: flex; align-items: center; justify-content: center; text-align: center;
+    font: 11px/1.15 inherit; color: var(--text);
+    background: var(--pocket-bg); border: 1px solid var(--pocket-border); border-radius: 5px;
+    cursor: pointer; overflow: hidden;
+  }
+  .pocket:hover { border-color: var(--focus); }
+  .pocket:focus-visible { outline: 2px solid var(--focus); outline-offset: 1px; }
+  .pocket.hit { background: var(--hit); border-color: var(--hit); color: var(--hit-text); font-weight: 600; }
+  .pocket.selected { box-shadow: 0 0 0 3px var(--focus); }
+  .pocket .n {
+    position: absolute; top: 2px; right: 3px; font-size: 10px; font-weight: 700;
+  }
+
+  .panels { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 16px 0 32px; }
+  @media (max-width: 800px) { .panels { grid-template-columns: 1fr; } }
+  .panel { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; }
+  .panel h2 { font-size: 1rem; margin: 0 0 8px; }
+  .panel .empty { color: var(--muted); margin: 0; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th, td { text-align: left; padding: 5px 6px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { font-weight: 600; color: var(--muted); font-size: 12px; }
+  td.num { text-align: right; white-space: nowrap; }
+  tr.match td { background: var(--hit-soft); }
+  .note { color: var(--muted); font-size: 12px; }
+  tbody tr.clickable { cursor: pointer; }
+  tbody tr.clickable:hover td { background: var(--area-bg); }
+</style>
+</head>
+<body>
+<header>
+  <h1>Truck Familiarization</h1>
+  <p class="sub">Left-side cabinetry. Search for an item to see where it lives, or click a pocket to see what's in it.</p>
+</header>
+<main>
+  <div class="controls">
+    <input id="search" type="search" list="item-names" placeholder="Search items, e.g. NPA, flush, 18g" autocomplete="off" aria-label="Search items">
+    <datalist id="item-names"></datalist>
+    <button id="clear" type="button">Clear</button>
+    <span class="status" id="status"></span>
+  </div>
+
+  <div class="wall-scroll"><div class="wall" id="wall"></div></div>
+
+  <div class="panels">
+    <section class="panel">
+      <h2 id="results-title">Matches</h2>
+      <div id="results"><p class="empty">Type in the search box to find items.</p></div>
+    </section>
+    <section class="panel">
+      <h2 id="pocket-title">Pocket contents</h2>
+      <div id="pocket"><p class="empty">Click a pocket on the wall to list what's in it.</p></div>
+    </section>
+  </div>
+</main>
+
+<script>
+const GROUPS_SHOWN = ['left-cabinets'];
+
+const state = { items: [], areas: [], query: '', selected: null };
+const $ = (id) => document.getElementById(id);
+const SEP = ' :: ';
+const key = (loc, sub) => loc + SEP + sub;
+
+function parseCSV(text) {
+  const rows = [];
+  let row = [], field = '', quoted = false;
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i];
+    if (quoted) {
+      if (c === '"' && text[i + 1] === '"') { field += '"'; i++; }
+      else if (c === '"') quoted = false;
+      else field += c;
+    } else if (c === '"') quoted = true;
+    else if (c === ',') { row.push(field); field = ''; }
+    else if (c === '\n' || c === '\r') {
+      if (c === '\r' && text[i + 1] === '\n') i++;
+      row.push(field); field = '';
+      if (row.some((v) => v !== '')) rows.push(row);
+      row = [];
+    } else field += c;
+  }
+  if (field || row.length) { row.push(field); rows.push(row); }
+  const [header, ...body] = rows;
+  return body.map((r) => Object.fromEntries(header.map((h, i) => [h, r[i] ?? ''])));
+}
+
+async function load() {
+  const [csv, layout] = await Promise.all([
+    fetch('data/truck_inventory.csv').then((r) => r.text()),
+    fetch('data/layout.json').then((r) => r.json()),
+  ]);
+  state.areas = layout.areas.filter((a) => GROUPS_SHOWN.includes(a.group));
+  const shownLocs = new Set(state.areas.map((a) => a.location));
+  state.items = parseCSV(csv)
+    .filter((r) => shownLocs.has(r['Main Location']))
+    .map((r) => ({
+      loc: r['Main Location'], sub: r['Sub Location'], name: r['Item'],
+      count: Number(r['Count']) || 0, notes: r['Notes'],
+      search: r['Item'].toLowerCase(),
+    }));
+  $('item-names').innerHTML = [...new Set(state.items.map((i) => i.name))].sort()
+    .map((n) => `<option value="${esc(n)}">`).join('');
+  drawWall(layout.canvas);
+  state.query = $('search').value = new URLSearchParams(location.search).get('q') || '';
+  render();
+}
+
+function esc(s) {
+  return String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+}
+
+// Fit the wall to the bounding box of the areas being shown.
+function drawWall(canvas) {
+  const x0 = Math.min(...state.areas.map((a) => a.x)) - 1.5;
+  const y0 = Math.min(...state.areas.map((a) => a.y)) - 1.5;
+  const x1 = Math.max(...state.areas.map((a) => a.x + a.w)) + 1.5;
+  const y1 = Math.max(...state.areas.map((a) => a.y + a.h)) + 1.5;
+  const bw = x1 - x0, bh = y1 - y0;
+  const wall = $('wall');
+  wall.style.aspectRatio = `${bw * canvas.width} / ${bh * canvas.height}`;
+  wall.innerHTML = state.areas.map((a) => `
+    <div class="area${a.status === 'placeholder' ? ' placeholder' : ''}" data-area="${esc(a.id)}"
+         style="left:${(a.x - x0) / bw * 100}%;top:${(a.y - y0) / bh * 100}%;width:${a.w / bw * 100}%;height:${a.h / bh * 100}%">
+      <div class="area-label" title="${esc(a.location)}">${esc(a.label)}</div>
+      ${a.subLocations.map((s) => `
+        <button type="button" class="pocket" data-key="${esc(key(a.location, s.name))}"
+             style="left:${s.x * 100}%;top:${s.y * 100}%;width:${s.w * 100}%;height:${s.h * 100}%"
+             title="${esc(s.name)}">${esc(s.label || s.name)}</button>`).join('')}
+    </div>`).join('');
+  wall.addEventListener('click', (e) => {
+    const p = e.target.closest('.pocket');
+    if (p) select(p.dataset.key);
+  });
+}
+
+function matches() {
+  const q = state.query.trim().toLowerCase();
+  if (!q) return [];
+  const terms = q.split(/\s+/);
+  return state.items.filter((i) => terms.every((t) => i.search.includes(t)));
+}
+
+function select(k) {
+  state.selected = state.selected === k ? null : k;
+  render();
+}
+
+function render() {
+  const hits = matches();
+  const hitCount = new Map();
+  for (const h of hits) hitCount.set(key(h.loc, h.sub), (hitCount.get(key(h.loc, h.sub)) || 0) + 1);
+  const hitAreas = new Set(hits.map((h) => h.loc));
+
+  document.querySelectorAll('.pocket').forEach((el) => {
+    const n = hitCount.get(el.dataset.key);
+    el.classList.toggle('hit', !!n);
+    el.classList.toggle('selected', el.dataset.key === state.selected);
+    el.querySelector('.n')?.remove();
+    if (n) el.insertAdjacentHTML('beforeend', `<span class="n">${n}</span>`);
+  });
+  document.querySelectorAll('.area').forEach((el) => {
+    const a = state.areas.find((x) => x.id === el.dataset.area);
+    el.classList.toggle('has-hit', hitAreas.has(a.location));
+  });
+
+  const q = state.query.trim();
+  $('status').textContent = q
+    ? `${hits.length} item${hits.length === 1 ? '' : 's'} in ${hitCount.size} pocket${hitCount.size === 1 ? '' : 's'}`
+    : '';
+  $('results-title').textContent = q ? `Matches for "${q}"` : 'Matches';
+  $('results').innerHTML = !q
+    ? '<p class="empty">Type in the search box to find items.</p>'
+    : !hits.length
+      ? '<p class="empty">No items on the side wall match.</p>'
+      : itemTable(hits, true);
+
+  if (!state.selected) {
+    $('pocket-title').textContent = 'Pocket contents';
+    $('pocket').innerHTML = '<p class="empty">Click a pocket on the wall to list what\'s in it.</p>';
+  } else {
+    const [loc, sub] = state.selected.split(SEP);
+    const area = state.areas.find((a) => a.location === loc);
+    const hitSet = new Set(hits);
+    $('pocket-title').textContent = `${area.label} · ${sub}`;
+    $('pocket').innerHTML = itemTable(state.items.filter((i) => i.loc === loc && i.sub === sub), false, hitSet);
+  }
+}
+
+function itemTable(rows, withLocation, hitSet) {
+  const label = (loc) => state.areas.find((a) => a.location === loc).label;
+  return `<table>
+    <thead><tr><th>Item</th>${withLocation ? '<th>Location</th>' : ''}<th class="num">Count</th></tr></thead>
+    <tbody>${rows.map((r) => `
+      <tr class="${hitSet && hitSet.has(r) ? 'match' : ''}${withLocation ? ' clickable' : ''}"
+          ${withLocation ? `data-key="${esc(key(r.loc, r.sub))}"` : ''}>
+        <td>${esc(r.name)}${r.notes ? `<div class="note">${esc(r.notes)}</div>` : ''}</td>
+        ${withLocation ? `<td>${esc(label(r.loc))} · ${esc(r.sub)}</td>` : ''}
+        <td class="num">${r.count}</td>
+      </tr>`).join('')}</tbody></table>`;
+}
+
+$('search').addEventListener('input', (e) => { state.query = e.target.value; render(); });
+$('clear').addEventListener('click', () => { $('search').value = ''; state.query = ''; state.selected = null; render(); $('search').focus(); });
+$('results').addEventListener('click', (e) => {
+  const tr = e.target.closest('tr[data-key]');
+  if (tr) { state.selected = tr.dataset.key; render(); }
+});
+
+load().catch((err) => {
+  $('wall').innerHTML = `<p style="padding:16px">Couldn't load the data files (${esc(err.message)}).
+    If you opened this file directly, serve the folder instead: <code>python -m http.server</code>,
+    then visit <code>http://localhost:8000</code>.</p>`;
+});
+</script>
+</body>
+</html>

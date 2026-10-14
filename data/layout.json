@@ -1,0 +1,294 @@
+{
+  "canvas": {
+    "width": 1200,
+    "height": 860
+  },
+  "groups": {
+    "left-cabinets": "Left-Side Cabinetry",
+    "stretcher-lifepak": "Stretcher and LIFEPAK",
+    "first-in-bag": "First-In (Red) Bag",
+    "trauma-bag": "Trauma Bag",
+    "refrigerator": "Medicine Refrigerator"
+  },
+  "areas": [
+    {
+      "id": "c5",
+      "location": "Cabinet 5: Burn Supplies",
+      "label": "C5: Burn Supplies",
+      "group": "left-cabinets",
+      "status": "from-prototype",
+      "x": 3.5,
+      "y": 15.0,
+      "w": 21.6,
+      "h": 12.1,
+      "subLocations": [
+        {"name": "Left Side of Divider", "x": 0.05, "y": 0.3, "w": 0.4, "h": 0.5},
+        {"name": "Right Side of Divider", "x": 0.55, "y": 0.3, "w": 0.4, "h": 0.5}
+      ]
+    },
+    {
+      "id": "c4",
+      "location": "Cabinet 4: ALS Airway/Pocket Ventilator",
+      "label": "C4: ALS Airway/Pocket Ventilator",
+      "group": "left-cabinets",
+      "status": "from-prototype",
+      "x": 25.7,
+      "y": 15.0,
+      "w": 21.5,
+      "h": 12.1,
+      "subLocations": [
+        {"name": "A1", "x": 0.025, "y": 0.3, "w": 0.2, "h": 0.5},
+        {"name": "A2", "x": 0.275, "y": 0.3, "w": 0.2, "h": 0.5},
+        {"name": "A4", "x": 0.525, "y": 0.3, "w": 0.2, "h": 0.5},
+        {"name": "Miscellaneous Items", "x": 0.775, "y": 0.3, "w": 0.2, "h": 0.5, "label": "Misc."}
+      ]
+    },
+    {
+      "id": "c3",
+      "location": "Cabinet 3: BLS Airway",
+      "label": "C3: BLS Airway",
+      "group": "left-cabinets",
+      "status": "from-prototype",
+      "x": 47.5,
+      "y": 14.9,
+      "w": 21.2,
+      "h": 12.2,
+      "subLocations": [
+        {"name": "A3", "x": 0.05, "y": 0.3, "w": 0.4, "h": 0.5},
+        {"name": "Miscellaneous Items", "x": 0.55, "y": 0.3, "w": 0.4, "h": 0.5, "label": "Misc."}
+      ]
+    },
+    {
+      "id": "c2",
+      "location": "Cabinet 2: IV Fluids",
+      "label": "C2: IV Fluids",
+      "group": "left-cabinets",
+      "status": "from-prototype",
+      "x": 68.9,
+      "y": 14.9,
+      "w": 22.8,
+      "h": 12.0,
+      "subLocations": [
+        {"name": "IV-3", "x": 0.025, "y": 0.3, "w": 0.2, "h": 0.5},
+        {"name": "IV-4", "x": 0.275, "y": 0.3, "w": 0.2, "h": 0.5},
+        {"name": "IV-5", "x": 0.525, "y": 0.3, "w": 0.2, "h": 0.5},
+        {"name": "Miscellaneous Items", "x": 0.775, "y": 0.3, "w": 0.2, "h": 0.5, "label": "Misc."}
+      ]
+    },
+    {
+      "id": "c6",
+      "location": "Cabinet 6: Trauma 1",
+      "label": "C6: Trauma 1",
+      "group": "left-cabinets",
+      "status": "from-prototype",
+      "x": 23.5,
+      "y": 27.8,
+      "w": 20.1,
+      "h": 12.1,
+      "subLocations": [
+        {"name": "T2", "x": 0.033, "y": 0.3, "w": 0.267, "h": 0.5},
+        {"name": "T4", "x": 0.367, "y": 0.3, "w": 0.267, "h": 0.5},
+        {"name": "Miscellaneous Items", "x": 0.7, "y": 0.3, "w": 0.267, "h": 0.5, "label": "Misc."}
+      ]
+    },
+    {
+      "id": "c7",
+      "location": "Cabinet 7: Extra IV/IO Supplies",
+      "label": "C7: Extra IV/IO Supplies",
+      "group": "left-cabinets",
+      "status": "from-prototype",
+      "x": 44.0,
+      "y": 27.8,
+      "w": 25.0,
+      "h": 12.0,
+      "subLocations": [
+        {"name": "IV-1", "x": 0.025, "y": 0.3, "w": 0.2, "h": 0.5},
+        {"name": "IV-2", "x": 0.275, "y": 0.3, "w": 0.2, "h": 0.5},
+        {"name": "A5", "x": 0.525, "y": 0.3, "w": 0.2, "h": 0.5},
+        {"name": "A7", "x": 0.775, "y": 0.3, "w": 0.2, "h": 0.5}
+      ]
+    },
+    {
+      "id": "c8",
+      "location": "Cabinet 8: Trauma 2",
+      "label": "C8: Trauma 2",
+      "group": "left-cabinets",
+      "status": "from-prototype",
+      "x": 23.6,
+      "y": 40.3,
+      "w": 20.2,
+      "h": 12.9,
+      "subLocations": [
+        {"name": "T1", "x": 0.025, "y": 0.3, "w": 0.2, "h": 0.5},
+        {"name": "T3", "x": 0.275, "y": 0.3, "w": 0.2, "h": 0.5},
+        {"name": "T6", "x": 0.525, "y": 0.3, "w": 0.2, "h": 0.5},
+        {"name": "Miscellaneous Items", "x": 0.775, "y": 0.3, "w": 0.2, "h": 0.5, "label": "Misc."}
+      ]
+    },
+    {
+      "id": "c1",
+      "location": "Cabinet 1: Action Area",
+      "label": "C1: Action Area",
+      "group": "left-cabinets",
+      "status": "from-prototype",
+      "x": 44.1,
+      "y": 40.2,
+      "w": 25.0,
+      "h": 13.0,
+      "subLocations": [
+        {"name": "AA-1", "x": 0.025, "y": 0.3, "w": 0.2, "h": 0.5},
+        {"name": "AA-2", "x": 0.275, "y": 0.3, "w": 0.2, "h": 0.5},
+        {"name": "AA-3", "x": 0.525, "y": 0.3, "w": 0.2, "h": 0.5},
+        {"name": "Glucometer Kit", "x": 0.775, "y": 0.3, "w": 0.2, "h": 0.5, "label": "Glucometer"}
+      ]
+    },
+    {
+      "id": "c9",
+      "location": "Cabinet 9: Obstetrics",
+      "label": "C9: Obstetrics",
+      "group": "left-cabinets",
+      "status": "from-prototype",
+      "x": 23.7,
+      "y": 53.6,
+      "w": 20.0,
+      "h": 13.4,
+      "subLocations": [
+        {"name": "Miscellaneous Items", "x": 0.1, "y": 0.3, "w": 0.8, "h": 0.5, "label": "Misc."}
+      ]
+    },
+    {
+      "id": "c10",
+      "location": "Cabinet 10: LIFEPAK Supplies",
+      "label": "C10: LIFEPAK Supplies",
+      "group": "left-cabinets",
+      "status": "from-prototype",
+      "x": 44.2,
+      "y": 53.6,
+      "w": 24.8,
+      "h": 13.4,
+      "subLocations": [
+        {"name": "LP1", "x": 0.033, "y": 0.3, "w": 0.267, "h": 0.5},
+        {"name": "LP2", "x": 0.367, "y": 0.3, "w": 0.267, "h": 0.5},
+        {"name": "ISO Bin", "x": 0.7, "y": 0.3, "w": 0.267, "h": 0.5}
+      ]
+    },
+    {
+      "id": "first-in-bag",
+      "location": "First-In Bag",
+      "label": "First-In (Red) Bag",
+      "group": "first-in-bag",
+      "status": "area-from-prototype",
+      "x": 2.0,
+      "y": 28.0,
+      "w": 20.6,
+      "h": 38.7,
+      "subLocations": [
+        {"name": "Top Zipper Pocket", "x": 0.1, "y": 0.139, "w": 0.8, "h": 0.076},
+        {"name": "Side IO Zipper Pocket", "x": 0.1, "y": 0.234, "w": 0.8, "h": 0.076},
+        {"name": "Side Airway Zipper Pocket", "x": 0.1, "y": 0.328, "w": 0.8, "h": 0.076},
+        {"name": "Inside Flap of Main Pocket", "x": 0.1, "y": 0.423, "w": 0.8, "h": 0.076},
+        {"name": "Syringe Box", "x": 0.1, "y": 0.517, "w": 0.8, "h": 0.076},
+        {"name": "Cardiac Drug Box", "x": 0.1, "y": 0.612, "w": 0.8, "h": 0.076},
+        {"name": "Blue IV Pod", "x": 0.1, "y": 0.706, "w": 0.8, "h": 0.076},
+        {"name": "Green Airway Pod", "x": 0.1, "y": 0.801, "w": 0.8, "h": 0.076},
+        {"name": "Loose Miscellaneous", "x": 0.1, "y": 0.895, "w": 0.8, "h": 0.076}
+      ]
+    },
+    {
+      "id": "lifepak",
+      "location": "LIFEPAK",
+      "label": "LIFEPAK",
+      "group": "stretcher-lifepak",
+      "status": "area-from-prototype",
+      "x": 69.8,
+      "y": 28.1,
+      "w": 23.4,
+      "h": 31.9,
+      "subLocations": [
+        {"name": "Left Side Pocket", "x": 0.1, "y": 0.151, "w": 0.8, "h": 0.17, "label": "Left Side"},
+        {"name": "Right Side Pocket", "x": 0.1, "y": 0.364, "w": 0.8, "h": 0.17, "label": "Right Side"},
+        {"name": "Rear Velcro Pocket", "x": 0.1, "y": 0.576, "w": 0.8, "h": 0.17},
+        {"name": "Top Zipper Pocket", "x": 0.1, "y": 0.789, "w": 0.8, "h": 0.17}
+      ]
+    },
+    {
+      "id": "c11",
+      "location": "Cabinet 11: Pediatric Bag",
+      "label": "C11: Pediatric Bag",
+      "group": "left-cabinets",
+      "status": "placeholder",
+      "x": 2.0,
+      "y": 70.0,
+      "w": 22.5,
+      "h": 27.0,
+      "subLocations": [
+        {"name": "Top Front Pocket", "x": 0.01, "y": 0.16, "w": 0.23, "h": 0.185, "label": "Top Front"},
+        {"name": "Right Side Pocket", "x": 0.26, "y": 0.16, "w": 0.23, "h": 0.185, "label": "Right Side"},
+        {"name": "Left Side Pocket", "x": 0.51, "y": 0.16, "w": 0.23, "h": 0.185, "label": "Left Side"},
+        {"name": "Front Side Pocket", "x": 0.76, "y": 0.16, "w": 0.23, "h": 0.185, "label": "Front Side"},
+        {"name": "Inside Zipper Pouch", "x": 0.01, "y": 0.365, "w": 0.23, "h": 0.185, "label": "Zipper Pouch"},
+        {"name": "Inside Main", "x": 0.26, "y": 0.365, "w": 0.23, "h": 0.185},
+        {"name": "Inside Zipper Area", "x": 0.51, "y": 0.365, "w": 0.23, "h": 0.185, "label": "Zipper Area"},
+        {"name": "Pink/Red Pouch (6-9 kg)", "x": 0.76, "y": 0.365, "w": 0.23, "h": 0.185, "label": "Pink/Red"},
+        {"name": "Purple Pouch (10-11 kg)", "x": 0.01, "y": 0.57, "w": 0.23, "h": 0.185, "label": "Purple"},
+        {"name": "Yellow Pouch (12-14 kg)", "x": 0.26, "y": 0.57, "w": 0.23, "h": 0.185, "label": "Yellow"},
+        {"name": "White Pouch (15-18 kg)", "x": 0.51, "y": 0.57, "w": 0.23, "h": 0.185, "label": "White"},
+        {"name": "Blue Pouch (19-22 kg)", "x": 0.76, "y": 0.57, "w": 0.23, "h": 0.185, "label": "Blue"},
+        {"name": "Orange Pouch (23-28 kg)", "x": 0.01, "y": 0.775, "w": 0.23, "h": 0.185, "label": "Orange"},
+        {"name": "Green Pouch (29-36 kg)", "x": 0.26, "y": 0.775, "w": 0.23, "h": 0.185, "label": "Green"},
+        {"name": "Miscellaneous Items", "x": 0.51, "y": 0.775, "w": 0.23, "h": 0.185, "label": "Misc."}
+      ]
+    },
+    {
+      "id": "stretcher",
+      "location": "Back Stretcher Pockets",
+      "label": "Stretcher",
+      "group": "stretcher-lifepak",
+      "status": "placeholder",
+      "x": 26.5,
+      "y": 70.0,
+      "w": 22.5,
+      "h": 27.0,
+      "subLocations": [
+        {"name": "Left Side Large Pocket", "x": 0.1, "y": 0.158, "w": 0.8, "h": 0.227},
+        {"name": "Right Side Pockets", "x": 0.1, "y": 0.442, "w": 0.8, "h": 0.227},
+        {"name": "Back of Stretcher (Loose)", "x": 0.1, "y": 0.725, "w": 0.8, "h": 0.227}
+      ]
+    },
+    {
+      "id": "trauma-bag",
+      "location": "Trauma Bag",
+      "label": "Trauma Bag",
+      "group": "trauma-bag",
+      "status": "placeholder",
+      "x": 51.0,
+      "y": 70.0,
+      "w": 22.5,
+      "h": 27.0,
+      "subLocations": [
+        {"name": "Front Zipper Pocket", "x": 0.1, "y": 0.144, "w": 0.8, "h": 0.113},
+        {"name": "Main Zipper Pocket", "x": 0.1, "y": 0.286, "w": 0.8, "h": 0.113},
+        {"name": "Right Side Pocket", "x": 0.1, "y": 0.427, "w": 0.8, "h": 0.113, "label": "Right Side"},
+        {"name": "Left Side Pocket", "x": 0.1, "y": 0.569, "w": 0.8, "h": 0.113, "label": "Left Side"},
+        {"name": "Right Pouch", "x": 0.1, "y": 0.711, "w": 0.8, "h": 0.113},
+        {"name": "Left Pouch", "x": 0.1, "y": 0.852, "w": 0.8, "h": 0.113}
+      ]
+    },
+    {
+      "id": "refrigerator",
+      "location": "Refrigerator",
+      "label": "Medicine Refrigerator",
+      "group": "refrigerator",
+      "status": "placeholder",
+      "x": 75.5,
+      "y": 70.0,
+      "w": 22.5,
+      "h": 27.0,
+      "subLocations": [
+        {"name": "MED 1", "x": 0.1, "y": 0.158, "w": 0.8, "h": 0.227},
+        {"name": "MED 2", "x": 0.1, "y": 0.442, "w": 0.8, "h": 0.227},
+        {"name": "Medication Box", "x": 0.1, "y": 0.725, "w": 0.8, "h": 0.227}
+      ]
+    }
+  ]
+}
